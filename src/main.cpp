@@ -123,8 +123,7 @@ int main(void)
 					showCode = true;
 				}
 
-				ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
-				ImGui::Text("Press enter in the fields to save the value (no visual feedback currently)!");
+				// ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
 				ImGui::End();
 			}
 
