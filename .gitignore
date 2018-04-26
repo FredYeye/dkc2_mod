@@ -1,0 +1,10 @@
+src/imgui
+imgui.ini
+/bin
+/CMakeFiles
+/cmake_install.cmake
+/CMakeCache.txt
+/Makefile
+/.vscode
+build.bat
+*.sfc
