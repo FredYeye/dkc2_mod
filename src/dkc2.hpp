@@ -100,6 +100,11 @@ class DKC2
                 {"5. Mudhole Marsh"   , 0x2C},
                 {"6. Rambi Rumble"    , 0x02},
                 {"7. King Zing Sting" , 0x60},
+
+                {"Rambi Rumble rambi room", 0x12},
+
+                {"Rambi Rumble Bonus 1", 0xB4},
+                {"Rambi Rumble Bonus 2", 0xB2},
             },
             { //W5
                 {"1. Ghostly Grove"     , 0x19},
@@ -134,7 +139,7 @@ class DKC2
 
 // /-----------------------------------------------\ level IDs found so far
 // |   01 02 03 04 05    07 08 09 0A 0B 0C 0D 0E 0F|
-// |10 11    13 14 15 16 17 18 19 1A 1B    1D      |
+// |10 11 12 13 14 15 16 17 18 19 1A 1B    1D      |
 // |   21    23 24 25       28 29       2C 2D 2E 2F|
 // |                                               |
 // |                                               |
@@ -144,7 +149,7 @@ class DKC2
 // |80 81                                        8F|
 // |                  96       99 9A               |
 // |                        A8                     |
-// |                           B9                  |
+// |      B2    B4             B9                  |
 // |                                               |
 // |                                               |
 // |                                               |

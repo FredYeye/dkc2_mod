@@ -54,6 +54,10 @@ bool DKC2::OpenRom()
 
 void DKC2::Save()
 {
+    //maybe save changes to a separate vector and mention how many bytes were changed or something (for sanity checking)
+    const std::vector<uint8_t> romCopy = rom;
+
+
     for(int x = 0; x < 3; ++x)
     {
         SetWord(DKCoinOffset + x*8, DKCoinThresholds[x]);
@@ -73,6 +77,16 @@ void DKC2::Save()
 
     SetWaterLevelTarget(sortedLevels);
     SetLevelData(sortedLevels);
+
+    uint32_t diffCount = 0;
+    for(int x = 0; x < rom.size(); ++x)
+    {
+        if(rom[x] != romCopy[x])
+        {
+            ++diffCount;
+        }
+    }
+    std::cout << "diff: " << diffCount << " bytes\n";
 
     U8vecToFile(rom, "modified.sfc");
 }

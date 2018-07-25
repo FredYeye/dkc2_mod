@@ -179,7 +179,7 @@ void WindowValues()
 
 	ImGui::Text("DK coin thresholds");
 
-	ImGui::PushItemWidth(42);
+	ImGui::PushItemWidth(40);
 	for(int x = 0; x < 3; ++x)
 	{
 		if(ImGui::InputText(dkc2.DKCoinNames[x].data(), DKCoinThresholds[x].data(), 5, ImGuiInputTextFlags_CharsDecimal))
@@ -243,7 +243,7 @@ void WindowValues()
 
 	ImGui::NewLine();
 
-	ImGui::PushItemWidth(42);
+	ImGui::PushItemWidth(40);
 	if(ImGui::InputText("X Starting position (hex)", posX.data(), 5, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
 	{
 		dkc2.world[currentWorld][currentLevel].posX[entry] = CharHexWordToUint16(posX);
@@ -256,10 +256,13 @@ void WindowValues()
 
 	ImGui::NewLine();
 
+	ImGui::PushItemWidth(22);
 	if(ImGui::InputText("flags (hex)", flags.data(), flags.size(), ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
 	{
 		dkc2.world[currentWorld][currentLevel].flags[entry] = CharHexByteToUint8(flags);
 	}
+	ShowHelpMarker("0x02: initial facing direction\n0x40 and 0x80: some kind of camera controls (lock on to something else than the player?)");
+	ImGui::PopItemWidth();
 
 	ImGui::NewLine();
 
