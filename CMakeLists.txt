@@ -12,7 +12,9 @@ set(source_files
 	src/imgui/imgui.cpp
 	src/imgui/imgui_draw.cpp
 	src/imgui/imgui_demo.cpp
-	src/imgui/examples/opengl3_example/imgui_impl_glfw_gl3.cpp
+	src/imgui/imgui_widgets.cpp
+	src/imgui/examples/imgui_impl_glfw.cpp
+	src/imgui/examples/imgui_impl_opengl3.cpp
 	src/gl_core/gl_core_3_3.c
 	)
 

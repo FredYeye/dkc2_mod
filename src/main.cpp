@@ -1,5 +1,7 @@
 #include "imgui/imgui.h"
-#include "imgui/examples/opengl3_example/imgui_impl_glfw_gl3.h"
+#include "imgui/examples/imgui_impl_glfw.h"
+#include "imgui/examples/imgui_impl_opengl3.h"
+
 #include "gl_core/gl_core_3_3.h"
 #include <GLFW/glfw3.h>
 
@@ -40,7 +42,9 @@ int main(void)
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    ImGui_ImplGlfwGL3_Init(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init();
+
     ImGui::StyleColorsDark();
     ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
@@ -65,7 +69,9 @@ int main(void)
 				glfwSetWindowShouldClose(window, GL_TRUE);
 			}
 
-			ImGui_ImplGlfwGL3_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3); ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2);
 
@@ -157,13 +163,14 @@ int main(void)
         	glClearColor(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
 			glClear(GL_COLOR_BUFFER_BIT);
 			ImGui::Render();
-			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 			glfwSwapBuffers(window);
 			glfwPollEvents();
         }
 	}
 
-    ImGui_ImplGlfwGL3_Shutdown();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     glfwDestroyWindow(window);
 	glfwTerminate();

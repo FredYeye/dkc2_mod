@@ -1,4 +1,4 @@
-src/imgui
+/src/imgui
 imgui.ini
 /bin
 /CMakeFiles
