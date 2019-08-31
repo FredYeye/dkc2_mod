@@ -13,16 +13,22 @@ bool DKC2::OpenRom()
     {
         romStatus = "success";
 
-        for(int x = 0; x < 3; ++x)
+        if(!GetVersion())
         {
-            DKCoinThresholds[x] = GetU16(DKCoinOffset + x*8);
+            romStatus = "unrecognized version";
+            return false;
         }
 
-        if(GetU16(eggOffset) == 0x0FB0)
+        for(int x = 0; x < 3; ++x)
+        {
+            DKCoinThresholds[x] = GetU16(versionData.at(version).DKCoin + x*8);
+        }
+
+        if(GetU16(versionData.at(version).egg) == 0x0FB0)
         {
             goodEggs = false;
         }
-        else if(GetU16(eggOffset) == 0xEAEA)
+        else if(GetU16(versionData.at(version).egg) == 0xEAEA)
         {
             goodEggs = true;
         }
@@ -60,16 +66,16 @@ void DKC2::Save()
 
     for(int x = 0; x < 3; ++x)
     {
-        SetWord(DKCoinOffset + x*8, DKCoinThresholds[x]);
+        SetWord(versionData.at(version).DKCoin + x*8, DKCoinThresholds[x]);
     }
 
     const uint16_t eggCode = (goodEggs) ? 0xEAEA : 0x0FB0;
-    SetWord(eggOffset, eggCode); //todo: saves value even if offset is wrong
+    SetWord(versionData.at(version).egg, eggCode); //todo: saves value even if offset is wrong
 
     std::map<uint8_t, LevelAttributes> sortedLevels;
-    for(auto &v : world)
+    for(const auto &v : world)
     {
-        for(auto &w : v)
+        for(const auto &w : v)
         {
             sortedLevels.insert({w.ID, w});
         }
@@ -79,6 +85,7 @@ void DKC2::Save()
     SetLevelData(sortedLevels);
 
     uint32_t diffCount = 0;
+
     for(int x = 0; x < rom.size(); ++x)
     {
         if(rom[x] != romCopy[x])
@@ -319,18 +326,27 @@ void DKC2::SetLevelData(const std::map<uint8_t, LevelAttributes> &sortedLevels)
 }
 
 
-void DKC2::SetVersion(Version version)
+bool DKC2::GetVersion()
 {
-    if(version == JPrev0)
+    const std::string buildDate = {char(rom[0x3F0029]), char(rom[0x3F002A])}; //seconds of build string
+
+    if(dateToVersion.count(buildDate))
     {
-        eggOffset = 0x36F43D;
-        DKCoinOffset = 0x34BE7D;
+        version = dateToVersion.at(buildDate);
     }
-    else if(version == USrev0)
+    else
     {
-        eggOffset = 0x36F46E;
-        DKCoinOffset = 0x34BE8F;
+        std::cout << "unrecognized version of dkc2!\n";
+        return false;
     }
+
+    if(version != US_rev0 && version != JP_rev0)
+    {
+        std::cout << "currently unsupported version of dkc2!\n";
+        return false;
+    }
+
+    return true;
 }
 
 

@@ -7,16 +7,25 @@
 #include <map>
 
 
-enum Version : int8_t{JPrev0 = 0, USrev0};
+enum Version : uint8_t
+{
+    US_rev0, JP_rev0, DE_rev0,
+    JP_rev1, EU_rev1, DE_rev1, US_rev1,
+};
 
 struct LevelAttributes
 {
     std::string name;
     uint8_t ID;
-    std::array<uint16_t, 6> posX;
-    std::array<uint16_t, 6> posY;
+    std::array<uint16_t, 6> posX, posY;
     std::array<uint8_t, 6> flags;
     std::array<uint16_t, 6> waterLevelTarget;
+};
+
+struct VersionData
+{
+    uint32_t egg, DKCoin;
+    std::string name;
 };
 
 
@@ -33,7 +42,7 @@ class DKC2
         void GetLevelData(LevelAttributes &levelAttributes, int8_t entry);
         void SetLevelData(const std::map<uint8_t, LevelAttributes> &sortedLevels);
 
-        void SetVersion(Version version);
+        bool GetVersion();
 
         const uint8_t  GetU8(uint32_t address) const;
         void SetU8(uint32_t address, uint8_t value);
@@ -48,6 +57,13 @@ class DKC2
         std::array<uint16_t, 3> DKCoinThresholds;
         const std::array<std::string, 3> DKCoinNames{"Mario", "Yoshi", "Link"};
         bool goodEggs;
+        Version version;
+
+        const std::map<Version, VersionData> versionData
+        {
+            {US_rev0, {0x36F46E, 0x34BE8F, "US rev 0"}},
+            {JP_rev0, {0x36F43D, 0x34BE7D, "JP rev 0"}},
+        };
 
         std::vector<std::vector<LevelAttributes>> world
         {
@@ -91,6 +107,8 @@ class DKC2
                 {"5. Slime Climb"      , 0x0A},
                 {"6. Bramble Blast"    , 0x2D},
                 {"7. Kudgel's Kontest" , 0x63},
+
+				{"Rattle Battle room", 0x22},
             },
             { //W4
                 {"1. Hornet Hole"     , 0x11},
@@ -103,6 +121,7 @@ class DKC2
 
                 {"Rambi Rumble rambi room", 0x12},
 
+				{"Rickety Race Bonus 1", 0xC3},
                 {"Rambi Rumble Bonus 1", 0xB4},
                 {"Rambi Rumble Bonus 2", 0xB2},
             },
@@ -122,6 +141,9 @@ class DKC2
                 {"5. Chain Link Chamber" , 0x6D},
                 {"6. Toxic Tower"        , 0x6E},
                 {"7. Stronghold Showdown", 0xB9},
+
+				{"Clapper's Cavern Bonus 1", 0x91},
+				{"Clapper's Cavern Bonus 2", 0x92},
             },
             { //W7
                 {"1. Screech's Sprint", 0x2F},
@@ -134,29 +156,39 @@ class DKC2
                 {"4. Fiery Furnace"   , 0x16},
                 {"5. Animal Antics"   , 0x9A},
                 // {"Krocodile Kore"    , 0x},
+
+				{"Animal Antics Bonus 1", 0x9D},
             },
         };
 
 // /-----------------------------------------------\ level IDs found so far
 // |   01 02 03 04 05    07 08 09 0A 0B 0C 0D 0E 0F|
 // |10 11 12 13 14 15 16 17 18 19 1A 1B    1D      |
-// |   21    23 24 25       28 29       2C 2D 2E 2F|
+// |   21 22 23 24 25       28 29       2C 2D 2E 2F|
 // |                                               |
 // |                                               |
 // |                                               |
 // |60 61 62 63             68          6C 6D 6E 6F|
 // |70 71                   78 79    7B 7C 7D      |
 // |80 81                                        8F|
-// |                  96       99 9A               |
+// |   91 92          96       99 9A               |
 // |                        A8                     |
 // |      B2    B4             B9                  |
-// |                                               |
+// |         C3                                    |
 // |                                               |
 // |                                               |
 // |                                               |
 // \-----------------------------------------------/
 
     private:
-        uint32_t eggOffset = 0x36F43D;
-        uint32_t DKCoinOffset = 0x34BE7D;
+        const std::map<std::string, Version> dateToVersion
+        {
+            {"46", US_rev0},
+            {"44", JP_rev0},
+            {"03", DE_rev0},
+            {"48", JP_rev1},
+            {"54", EU_rev1},
+            {"00", DE_rev1},
+            {"06", US_rev1},
+        };
 };

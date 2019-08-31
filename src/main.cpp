@@ -23,7 +23,7 @@ int main(void)
 		exit(1);
 	}
 
-	GLFWwindow* window = glfwCreateWindow(960, 680, "wah", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(960, 680, "DKC2 mod tool", NULL, NULL);
 	if(!window)
 	{
 		glfwTerminate();
@@ -87,22 +87,6 @@ int main(void)
 				ImGui::SameLine();
 				ImGui::Text(dkc2.romStatus.data());
 
-				ImGui::PushItemWidth(80);
-				if(ImGui::BeginCombo("Version", versionNames[version].data()))
-				{
-					for(int n = 0; n < versionNames.size(); ++n)
-					{
-						bool is_selected;
-						if(ImGui::Selectable(versionNames[n].data()))
-						{
-							version = n;
-							dkc2.SetVersion(Version(n));
-						}
-					}
-					ImGui::EndCombo();
-				}
-				ImGui::PopItemWidth();
-
 				if(ImGui::Button("Load rom") || enterLoad)
 				{
 					if(dkc2.OpenRom())
@@ -120,11 +104,11 @@ int main(void)
 
 				if(dkc2.rom.size())
 				{
-					ImGui::SameLine();
 					if(ImGui::Button("Save changes"))
 					{
 						dkc2.Save();
 					}
+					ImGui::Text(dkc2.versionData.at(dkc2.version).name.c_str());
 					showValues = true;
 					showCode = true;
 				}
