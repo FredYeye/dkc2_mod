@@ -23,7 +23,7 @@ int main(void)
 		exit(1);
 	}
 
-	GLFWwindow* window = glfwCreateWindow(960, 680, "DKC2 mod tool", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(800, 680, "DKC2 mod tool", NULL, NULL);
 	if(!window)
 	{
 		glfwTerminate();
@@ -113,7 +113,7 @@ int main(void)
 					showCode = true;
 				}
 
-				ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
+				// ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
 				ImGui::End();
 			}
 
@@ -125,7 +125,7 @@ int main(void)
 			if(showCode)
 			{
 				ImGui::SetNextWindowPos(ImVec2(320, 150));
-				ImGui::SetNextWindowSize(ImVec2(300,100));
+				ImGui::SetNextWindowSize(ImVec2(280,100));
 				ImGui::Begin("Code options", &showCode, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
 
 				ImGui::Checkbox("Always good eggs (Krow's Nest)", &dkc2.goodEggs);

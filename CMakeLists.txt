@@ -1,9 +1,9 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.8)
 set(project_name dkc2_mod_tool)
 project(${project_name})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -static")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
 
 set(source_files
 	src/main.cpp
@@ -34,3 +34,6 @@ add_definitions(-DWINDOWS -lglfw3 -lgdi32 -lopengl32 -limm32)
 
 add_executable(${project_name} ${header_files} ${source_files})
 target_link_libraries(${project_name} ${GLFW_LIBRARY} opengl32)
+
+target_compile_features(${project_name} PUBLIC cxx_std_17)
+set_target_properties(${project_name} PROPERTIES CXX_EXTENSIONS OFF)
