@@ -93,12 +93,12 @@ int main(void)
 					{
 						for(int x = 0; x < 3; ++x)
 						{
-							WordToCharArray(DKCoinThresholds[x], dkc2.DKCoinThresholds[x], dec);
+							DKCoinThresholds[x] = dkc2.DKCoinThresholds[x];
 						}
-						WordToCharArray(posX, dkc2.world[currentWorld][currentLevel].posX[entry], hex);
-						WordToCharArray(posY, dkc2.world[currentWorld][currentLevel].posY[entry], hex);
-						ByteToCharArray(flags, dkc2.world[currentWorld][currentLevel].flags[entry], hex);
-						WordToCharArray(waterTarget, dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry], hex);
+						posX = dkc2.world[currentWorld][currentLevel].posX[entry];
+						posY = dkc2.world[currentWorld][currentLevel].posY[entry];
+						flags = dkc2.world[currentWorld][currentLevel].flags[entry];
+						waterTarget = dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry];
 					}
 				}
 
@@ -113,7 +113,7 @@ int main(void)
 					showCode = true;
 				}
 
-				// ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
+				ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
 				ImGui::End();
 			}
 
@@ -138,7 +138,7 @@ int main(void)
 			if(show_demo_window)
 			{
 				ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
-				// ImGui::ShowDemoWindow(&show_demo_window);
+				ImGui::ShowDemoWindow(&show_demo_window);
 			}
 
 			int display_w, display_h;
@@ -170,12 +170,12 @@ void WindowValues()
 
 	ImGui::Text("DK coin thresholds");
 
-	ImGui::PushItemWidth(40);
+	ImGui::PushItemWidth(45);
 	for(int x = 0; x < 3; ++x)
 	{
-		if(ImGui::InputText(dkc2.DKCoinNames[x].data(), DKCoinThresholds[x].data(), 5, ImGuiInputTextFlags_CharsDecimal))
+		if(ImGui::InputScalar(dkc2.DKCoinNames[x].data(), ImGuiDataType_U16, &DKCoinThresholds[x], 0, 0, "%d"))
 		{
-			dkc2.DKCoinThresholds[x] = CharHexWordToUint16(DKCoinThresholds[x]);
+			dkc2.DKCoinThresholds[x] = DKCoinThresholds[x];
 		}
 	}
 	ImGui::PopItemWidth();
@@ -195,10 +195,10 @@ void WindowValues()
 					{
 						currentLevel = y;
 						currentWorld = x;
-						WordToCharArray(posX, dkc2.world[x][y].posX[entry], hex);
-						WordToCharArray(posY, dkc2.world[x][y].posY[entry], hex);
-						ByteToCharArray(flags, dkc2.world[x][y].flags[entry], hex);
-						WordToCharArray(waterTarget, dkc2.world[x][y].waterLevelTarget[entry], hex);
+						posX = dkc2.world[x][y].posX[entry];
+						posY = dkc2.world[x][y].posY[entry];
+						flags = dkc2.world[x][y].flags[entry];
+						waterTarget = dkc2.world[x][y].waterLevelTarget[entry];
 					}
 				}
 				ImGui::EndMenu();
@@ -212,10 +212,10 @@ void WindowValues()
 	ImGui::PushItemWidth(100);
 	if(ImGui::SliderInt("Entrypoint", &entry, 0, 5))
 	{
-		WordToCharArray(posX, dkc2.world[currentWorld][currentLevel].posX[entry], hex);
-		WordToCharArray(posY, dkc2.world[currentWorld][currentLevel].posY[entry], hex);
-		ByteToCharArray(flags, dkc2.world[currentWorld][currentLevel].flags[entry], hex);
-		WordToCharArray(waterTarget, dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry], hex);
+		posX = dkc2.world[currentWorld][currentLevel].posX[entry];
+		posY = dkc2.world[currentWorld][currentLevel].posY[entry];
+		flags = dkc2.world[currentWorld][currentLevel].flags[entry];
+		waterTarget = dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry];
 	}
 	ImGui::PopItemWidth();
 	ShowHelpMarker("0: stage start\n1: midway barrel\n2+: return points from rooms and bonuses\n\nCurrently, this program doesn't know how many entry points a stage has, the slider is simply hardcoded to 0-5.\nBe careful or you might edit unintended values in ROM!");
@@ -235,31 +235,31 @@ void WindowValues()
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(40);
-	if(ImGui::InputText("X Starting position (hex)", posX.data(), 5, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
+	if(ImGui::InputScalar("X Starting position (hex)", ImGuiDataType_U16, &posX, 0, 0, "%04X", ImGuiInputTextFlags_CharsHexadecimal))
 	{
-		dkc2.world[currentWorld][currentLevel].posX[entry] = CharHexWordToUint16(posX);
+		dkc2.world[currentWorld][currentLevel].posX[entry] = posX;
 	}
 
-	if(ImGui::InputText("Y Starting position (hex)", posY.data(), 5, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
+	if(ImGui::InputScalar("Y Starting position (hex)", ImGuiDataType_U16, &posY, 0, 0, "%04X", ImGuiInputTextFlags_CharsHexadecimal))
 	{
-		dkc2.world[currentWorld][currentLevel].posY[entry] = CharHexWordToUint16(posY);
+		dkc2.world[currentWorld][currentLevel].posY[entry] = posY;
 	}
 
 	ImGui::NewLine();
 
 	ImGui::PushItemWidth(22);
-	if(ImGui::InputText("flags (hex)", flags.data(), flags.size(), ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
+	if(ImGui::InputScalar("flags (hex)", ImGuiDataType_U16, &flags, 0, 0, "%02X", ImGuiInputTextFlags_CharsHexadecimal))
 	{
-		dkc2.world[currentWorld][currentLevel].flags[entry] = CharHexByteToUint8(flags);
+		dkc2.world[currentWorld][currentLevel].flags[entry] = flags;
 	}
 	ShowHelpMarker("0x02: initial facing direction\n0x40 and 0x80: some kind of camera controls (lock on to something else than the player?)");
 	ImGui::PopItemWidth();
 
 	ImGui::NewLine();
 
-	if(ImGui::InputText("Water level target (hex)", waterTarget.data(), 5, ImGuiInputTextFlags_CharsHexadecimal | ImGuiInputTextFlags_CharsUppercase))
+	if(ImGui::InputScalar("Water level target (hex)", ImGuiDataType_U16, &waterTarget, 0, 0, "%04X", ImGuiInputTextFlags_CharsHexadecimal))
 	{
-		dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry] = CharHexWordToUint16(waterTarget);
+		dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry] = waterTarget;
 	}
 	ImGui::PopItemWidth();
 	ShowHelpMarker("0x8000 means no water in this stage and changing it does nothing currently");
@@ -268,54 +268,54 @@ void WindowValues()
 }
 
 
-uint16_t CharHexWordToUint16(std::array<char, 5> charArray)
-{
-	char* p = charArray.data() + charArray.size();
-	return strtoul(charArray.data(), &p, 16);
-}
+// uint16_t CharHexWordToUint16(std::array<char, 5> charArray)
+// {
+// 	char *p = charArray.data() + charArray.size();
+// 	return strtoul(charArray.data(), &p, 16);
+// }
 
 
-uint8_t CharHexByteToUint8(std::array<char, 3> charArray)
-{
-	char* p = charArray.data() + charArray.size();
-	return strtoul(charArray.data(), &p, 16);
-}
+// uint8_t CharHexByteToUint8(std::array<char, 3> charArray)
+// {
+// 	char *p = charArray.data() + charArray.size();
+// 	return strtoul(charArray.data(), &p, 16);
+// }
 
 
-void WordToCharArray(std::array<char, 5> &charArray, uint16_t value, Base base)
-{
-	std::stringstream stream;
+// void WordToCharArray(std::array<char, 5> &charArray, uint16_t value, Base base)
+// {
+// 	std::stringstream stream;
 
-	if(base == dec)
-	{
-		stream << value;
-	}
-	else
-	{
-		stream << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << value;
-	}
+// 	if(base == dec)
+// 	{
+// 		stream << value;
+// 	}
+// 	else
+// 	{
+// 		stream << std::hex << std::setfill('0') << std::setw(4) << std::uppercase << value;
+// 	}
 
-	const std::string result(stream.str());
-	std::strcpy(charArray.data(), result.data());
-}
+// 	const std::string result(stream.str());
+// 	std::strcpy(charArray.data(), result.data());
+// }
 
 
-void ByteToCharArray(std::array<char, 3> &charArray, uint8_t value, Base base)
-{
-	std::stringstream stream;
+// void ByteToCharArray(std::array<char, 3> &charArray, uint8_t value, Base base)
+// {
+// 	std::stringstream stream;
 
-	if(base == dec)
-	{
-		stream << value;
-	}
-	else
-	{
-		stream << std::hex << std::setfill('0') << std::setw(2) << std::uppercase << +value;
-	}
+// 	if(base == dec)
+// 	{
+// 		stream << value;
+// 	}
+// 	else
+// 	{
+// 		stream << std::hex << std::setfill('0') << std::setw(2) << std::uppercase << +value;
+// 	}
 
-	const std::string result(stream.str());
-	std::strcpy(charArray.data(), result.data());
-}
+// 	const std::string result(stream.str());
+// 	std::strcpy(charArray.data(), result.data());
+// }
 
 
 void ShowHelpMarker(const char* desc)

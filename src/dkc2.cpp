@@ -11,13 +11,13 @@ bool DKC2::OpenRom()
     rom = FileToU8Vec(romName.data());
     if(rom.size())
     {
-        romStatus = "success";
-
         if(!GetVersion())
         {
             romStatus = "unrecognized version";
             return false;
         }
+
+        romStatus = "success";
 
         for(int x = 0; x < 3; ++x)
         {
@@ -69,7 +69,7 @@ void DKC2::Save()
         SetWord(versionData.at(version).DKCoin + x*8, DKCoinThresholds[x]);
     }
 
-    const uint16_t eggCode = (goodEggs) ? 0xEAEA : 0x0FB0;
+    const uint16_t eggCode = (goodEggs) ? 0xEAEA : 0x0FB0; //nop #2 : bcs
     SetWord(versionData.at(version).egg, eggCode); //todo: saves value even if offset is wrong
 
     std::map<uint8_t, LevelAttributes> sortedLevels;
