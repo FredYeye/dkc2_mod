@@ -65,6 +65,12 @@ class DKC2
             {JP_rev0, {0x36F43D, 0x34BE7D, "JP rev 0"}},
         };
 
+        const std::array<std::string, 8> worldNames
+        {
+            "1: Gangplank Galleon", "2: Crocodile Cauldron", "3: Krem Quay", "4: Krazy Kremland",
+            "5: Gloomy Gulch", "6: K. Rool's Keep", "7: The Flying Krock", "8: Lost World",
+        };
+
         std::vector<std::vector<LevelAttributes>> world
         {
             { //W1

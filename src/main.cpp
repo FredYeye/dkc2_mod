@@ -73,71 +73,11 @@ int main(void)
 			ImGui_ImplGlfw_NewFrame();
 			ImGui::NewFrame();
 
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3); ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2);
-
-			{
-				ImGui::SetNextWindowPos(ImVec2(10, 10));
-				ImGui::SetNextWindowSize(ImVec2(540,130));
-				ImGui::Begin(" ", &showMain, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
-
-				ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.75f);
-				const bool enterLoad = ImGui::InputText("", dkc2.romName.data(), 80, ImGuiInputTextFlags_EnterReturnsTrue);
-				ImGui::PopItemWidth();
-
-				ImGui::SameLine();
-				ImGui::Text(dkc2.romStatus.data());
-
-				if(ImGui::Button("Load rom") || enterLoad)
-				{
-					if(dkc2.OpenRom())
-					{
-						for(int x = 0; x < 3; ++x)
-						{
-							DKCoinThresholds[x] = dkc2.DKCoinThresholds[x];
-						}
-						posX = dkc2.world[currentWorld][currentLevel].posX[entry];
-						posY = dkc2.world[currentWorld][currentLevel].posY[entry];
-						flags = dkc2.world[currentWorld][currentLevel].flags[entry];
-						waterTarget = dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry];
-					}
-				}
-
-				if(dkc2.rom.size())
-				{
-					if(ImGui::Button("Save changes"))
-					{
-						dkc2.Save();
-					}
-					ImGui::Text(dkc2.versionData.at(dkc2.version).name.c_str());
-					showValues = true;
-					showCode = true;
-				}
-
-				// ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our windows open/close state
-				ImGui::End();
-			}
-
-			if(showValues)
-			{
-				WindowValues();
-			}
-
-			if(showCode)
-			{
-				ImGui::SetNextWindowPos(ImVec2(320, 150));
-				ImGui::SetNextWindowSize(ImVec2(280,100));
-				ImGui::Begin("Code options", &showCode, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
-
-				ImGui::Checkbox("Always good eggs (Krow's Nest)", &dkc2.goodEggs);
-
-				ImGui::End();
-			}
-
-			ImGui::PopStyleVar(); ImGui::PopStyleVar();
+			ImguiStuff();
 
 			if(show_demo_window)
 			{
-				ImGui::SetNextWindowPos(ImVec2(650, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
+				ImGui::SetNextWindowPos(ImVec2(540, 20), ImGuiCond_FirstUseEver); // Normally user code doesn't need/want to call this because positions are saved in .ini file anyway. Here we just want to make the demo initial state a bit more friendly!
 				ImGui::ShowDemoWindow(&show_demo_window);
 			}
 
@@ -159,6 +99,74 @@ int main(void)
     glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
+}
+
+
+void ImguiStuff()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3);
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 2);
+
+	{
+		ImGui::SetNextWindowPos(ImVec2(10, 10));
+		ImGui::SetNextWindowSize(ImVec2(540,130));
+		ImGui::Begin(" ", &showMain, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
+
+		ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.75f);
+		const bool enterLoad = ImGui::InputText("", dkc2.romName.data(), 80, ImGuiInputTextFlags_EnterReturnsTrue);
+		ImGui::PopItemWidth();
+
+		ImGui::SameLine();
+		ImGui::Text(dkc2.romStatus.data());
+
+		if(ImGui::Button("Load rom") || enterLoad)
+		{
+			if(dkc2.OpenRom())
+			{
+				for(int x = 0; x < 3; ++x)
+				{
+					DKCoinThresholds[x] = dkc2.DKCoinThresholds[x];
+				}
+				posX = dkc2.world[currentWorld][currentLevel].posX[entry];
+				posY = dkc2.world[currentWorld][currentLevel].posY[entry];
+				flags = dkc2.world[currentWorld][currentLevel].flags[entry];
+				waterTarget = dkc2.world[currentWorld][currentLevel].waterLevelTarget[entry];
+			}
+		}
+
+		if(dkc2.rom.size())
+		{
+			if(ImGui::Button("Save changes"))
+			{
+				dkc2.Save();
+			}
+
+			ImGui::Text(dkc2.versionData.at(dkc2.version).name.c_str());
+			showValues = true;
+			showCode = true;
+		}
+
+		// ImGui::Checkbox("Demo Window", &show_demo_window); //awkward placement of this but w/e
+		ImGui::End();
+	}
+
+	if(showValues)
+	{
+		WindowValues();
+	}
+
+	if(showCode)
+	{
+		ImGui::SetNextWindowPos(ImVec2(320, 150));
+		ImGui::SetNextWindowSize(ImVec2(280,100));
+		ImGui::Begin("Code options", &showCode, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize);
+
+		ImGui::Checkbox("Always good eggs (Krow's Nest)", &dkc2.goodEggs);
+
+		ImGui::End();
+	}
+
+	ImGui::PopStyleVar(); ImGui::PopStyleVar();
 }
 
 
@@ -187,7 +195,7 @@ void WindowValues()
 	{
 		for(int x = 0; x < dkc2.world.size(); ++x)
 		{
-			if(ImGui::BeginMenu(worldNames[x].data()))
+			if(ImGui::BeginMenu(dkc2.worldNames[x].data()))
 			{
 				for(int y = 0; y < dkc2.world[x].size(); ++y)
 				{
@@ -268,6 +276,22 @@ void WindowValues()
 }
 
 
+void ShowHelpMarker(const char* desc)
+{
+	ImGui::SameLine();
+
+	ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+        ImGui::TextUnformatted(desc);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+
+
 // uint16_t CharHexWordToUint16(std::array<char, 5> charArray)
 // {
 // 	char *p = charArray.data() + charArray.size();
@@ -316,19 +340,3 @@ void WindowValues()
 // 	const std::string result(stream.str());
 // 	std::strcpy(charArray.data(), result.data());
 // }
-
-
-void ShowHelpMarker(const char* desc)
-{
-	ImGui::SameLine();
-
-	ImGui::TextDisabled("(?)");
-    if (ImGui::IsItemHovered())
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-        ImGui::TextUnformatted(desc);
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-}
