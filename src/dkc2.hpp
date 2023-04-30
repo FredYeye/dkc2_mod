@@ -115,6 +115,9 @@ class DKC2
                 {"7. Kudgel's Kontest" , 0x63},
 
 				{"Rattle Battle room", 0x22},
+
+                {"Glimmer's Galleon Bonus 1", 0x84},
+                {"Glimmer's Galleon Bonus 2", 0x82},
             },
             { //W4
                 {"1. Hornet Hole"     , 0x11},
@@ -161,8 +164,9 @@ class DKC2
                 {"3. Klobber Karnage" , 0x80},
                 {"4. Fiery Furnace"   , 0x16},
                 {"5. Animal Antics"   , 0x9A},
-                // {"Krocodile Kore"    , 0x},
+                {"Krocodile Kore"     , 0x6B},
 
+				{"Klobber Karnage 1"    , 0x97},
 				{"Animal Antics Bonus 1", 0x9D},
             },
         };
@@ -174,10 +178,10 @@ class DKC2
 // |                                               |
 // |                                               |
 // |                                               |
-// |60 61 62 63             68          6C 6D 6E 6F|
+// |60 61 62 63             68       6B 6C 6D 6E 6F|
 // |70 71                   78 79    7B 7C 7D      |
-// |80 81                                        8F|
-// |   91 92          96       99 9A               |
+// |80 81 82    84                               8F|
+// |   91 92          96 97    99 9A               |
 // |                        A8                     |
 // |      B2    B4             B9                  |
 // |         C3                                    |
